@@ -1,0 +1,82 @@
+services:
+
+  # ── MongoDB ────────────────────────────────────────────────────────────────
+  db:
+    image: mongo:7
+    container_name: db
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ──────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Node / Express backend ─────────────────────────────────────────────────
+  back:
+    image: 718036735416.dkr.ecr.ap-south-2.amazonaws.com/cura-common/back:dev
+    container_name: back
+    restart: unless-stopped
+    env_file: backend.env
+    environment:
+      MONGODB_URI: mongodb://db:27017/course
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - internal
+
+  # ── React frontend ─────────────────────────────────────────────────────────
+  front:
+    image: 718036735416.dkr.ecr.ap-south-2.amazonaws.com/cura-common/front:dev
+    container_name: front
+    restart: unless-stopped
+    networks:
+      - internal
+
+  # ── Nginx reverse proxy ────────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "8086:80"
+      # - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - front
+      - back
+    networks:
+      - internal
+
+volumes:
+  mongo_data:
+
+networks:
+  internal:
+    driver: bridge
