@@ -3,7 +3,6 @@ name: "Dev: Apply infra - SSH - git pull - write BACKEND_ENV"
 on:
   push:
     branches: [master]
-  workflow_call:
   
   workflow_dispatch:
     
@@ -11,7 +10,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: main_env
 
     steps:
 
