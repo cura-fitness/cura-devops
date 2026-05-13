@@ -47,6 +47,24 @@ jobs:
           chmod 600 ~/.ssh/ec2_key
           ssh-keyscan -H ${{ steps.tf-output.outputs.elastic_ip }} >> ~/.ssh/known_hosts
 
+      - name: Wait for EC2 provisioning to complete
+        run: |
+          for i in $(seq 1 24); do
+            if ssh -i ~/.ssh/ec2_key \
+                  -o StrictHostKeyChecking=no \
+                  -o ConnectTimeout=5 \
+                  ec2-user@${{ steps.tf-output.outputs.elastic_ip }} \
+                  "test -f /var/log/bootstrap-complete"; then
+              echo "Provisioning complete"
+              exit 0
+            fi
+            echo "Attempt $i/24 — not ready, retrying in 15s..."
+            sleep 15
+          done
+          echo "Timed out waiting for provisioning"
+          exit 1
+
+
       - name: Deploy on EC2
         env:
           BACKEND_ENV: ${{ secrets.BACKEND_ENV_FILE }}
