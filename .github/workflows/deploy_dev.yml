@@ -81,13 +81,13 @@ jobs:
         env:
           BACKEND_ENV: ${{ secrets.BACKEND_ENV_FILE }}
         run: |
-          ssh -i ~/.ssh/ec2_key ec2-user@${{ steps.tf-output.outputs.elastic_ip }} \
-            "BACKEND_ENV=$(printf '%s' "$BACKEND_ENV" | base64)" bash << 'EOF'
+          ENCODED_ENV=$(printf '%s' "$BACKEND_ENV" | base64)
+          ssh -i ~/.ssh/ec2_key ec2-user@${{ steps.tf-output.outputs.elastic_ip }} bash << EOF
             set -e
             cd ~/app
             git pull origin master
             cd 03-dev
-            echo "$BACKEND_ENV" | base64 --decode > backend.env
+            echo "${ENCODED_ENV}" | base64 --decode > backend.env
             docker compose pull
             docker compose up -d
           EOF
