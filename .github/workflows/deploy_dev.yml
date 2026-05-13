@@ -87,5 +87,5 @@ jobs:
             cd 03-dev
             echo "${ENCODED_ENV}" | base64 --decode > backend.env
             docker compose pull
-            docker compose up -d
+            docker compose up -d --build
           EOF
