@@ -196,11 +196,10 @@ resource "aws_instance" "this" {
   iam_instance_profile   = aws_iam_instance_profile.ec2.name
 
   user_data                   = local.user_data
-  user_data_replace_on_change = true # recreate instance if user-data changes
 
   root_block_device {
     volume_type           = "gp3"
-    volume_size           = 20
+    volume_size           = 30
     delete_on_termination = true
     encrypted             = true
   }
@@ -210,6 +209,10 @@ resource "aws_instance" "this" {
   }
 
   tags = merge(local.common_tags, { Name = "${local.name_prefix}-ec2" })
+
+  lifecycle {
+    ignore_changes = [ami]
+  }
 }
 
 ###############################################################################
