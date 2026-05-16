@@ -10,18 +10,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 10
     steps:
-
-      - name: Check secret is set
-        run: |
-          if [ -z "${{ secrets.AWS_INFRA_REGION }}" ]; then
-            echo "AWS_INFRA_REGION is empty or not set"
-          else
-            echo "AWS_INFRA_REGION is set (length: ${#AWS_INFRA_REGION})"
-          fi
-        env:
-          AWS_INFRA_REGION: ${{ secrets.AWS_INFRA_REGION }}
 
       - name: Checkout code
         uses: actions/checkout@v4
