@@ -13,6 +13,7 @@ services:
       - internal
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      start_period: 30s
       interval: 10s
       timeout: 5s
       retries: 5
