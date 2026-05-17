@@ -78,5 +78,5 @@ jobs:
             echo "${ENCODED_ENV}" | base64 --decode > backend.env
             bash /usr/local/bin/ecr-login
             docker compose pull front back
-            docker compose up -d
+            docker compose up -d --no-deps front back
           EOF
