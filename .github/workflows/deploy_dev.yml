@@ -77,6 +77,6 @@ jobs:
             cd 03-dev
             echo "${ENCODED_ENV}" | base64 --decode > backend.env
             bash /usr/local/bin/ecr-login
-            docker compose pull
-            docker compose up -d --build
+            docker compose pull front back
+            docker compose up -d
           EOF
