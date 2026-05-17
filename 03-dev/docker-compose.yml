@@ -36,7 +36,7 @@ services:
 
   # ── Node / Express backend ─────────────────────────────────────────────────
   back:
-    image: 718036735416.dkr.ecr.ap-south-2.amazonaws.com/cura-common/back:dev
+    image: 718036735416.dkr.ecr.eu-south-1.amazonaws.com/cura-common/back:dev
     container_name: back
     restart: unless-stopped
     env_file: backend.env
@@ -53,7 +53,7 @@ services:
 
   # ── React frontend ─────────────────────────────────────────────────────────
   front:
-    image: 718036735416.dkr.ecr.ap-south-2.amazonaws.com/cura-common/front:dev
+    image: 718036735416.dkr.ecr.eu-south-1.amazonaws.com/cura-common/front:dev
     container_name: front
     restart: unless-stopped
     networks:
