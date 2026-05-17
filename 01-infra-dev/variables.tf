@@ -7,6 +7,10 @@ variable "aws_region" {
   default = "ap-south-2"
 }
 
+variable "aws_region_ecr" {
+  default = "eu-south-1"
+}
+
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string

@@ -141,9 +141,9 @@ locals {
     # ── ECR login helper script ───────────────────────────────────────────────
     tee /usr/local/bin/ecr-login > /dev/null <<'EOF'
     #!/bin/bash
-    aws ecr get-login-password --region ${var.aws_region} \
+    aws ecr get-login-password --region ${var.aws_region_ecr} \
       | docker login --username AWS --password-stdin \
-          "$(aws sts get-caller-identity --query Account --output text).dkr.ecr.${var.aws_region}.amazonaws.com"
+          "$(aws sts get-caller-identity --query Account --output text).dkr.ecr.${var.aws_region_ecr}.amazonaws.com"
     EOF
     chmod +x /usr/local/bin/ecr-login
 
@@ -211,7 +211,7 @@ resource "aws_instance" "this" {
   tags = merge(local.common_tags, { Name = "${local.name_prefix}-ec2" })
 
   lifecycle {
-    ignore_changes = [ami]
+    ignore_changes = [ami, user_data]
   }
 }
 

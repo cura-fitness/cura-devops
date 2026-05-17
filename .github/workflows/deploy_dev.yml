@@ -3,7 +3,10 @@ name: "Dev: Apply infra - SSH - git pull - write BACKEND_ENV"
 on:
   push:
     branches: [master]
-  
+
+  pull_request:
+    branches: [master]
+
   workflow_dispatch:
     
 
@@ -21,7 +24,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_INFRA_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_INFRA_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_INFRA_REGION }}
+          aws-region: ${{ secrets.AWS_DEV_INFRA_REGION }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

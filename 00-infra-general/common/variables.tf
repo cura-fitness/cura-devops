@@ -1,5 +1,5 @@
 variable "aws_region" {
-  default = "ap-south-2"
+  default = "eu-south-1"
 }
 
 variable "project" {
